@@ -1,0 +1,63 @@
+services:
+  postgres:
+    container_name: postgres-sql
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: demo_db
+    ports:
+      - "9090:5432"  # ✅ Use default PostgreSQL port
+    volumes:
+      - postgres:/var/lib/postgresql/data  # ✅ Corrected volume path
+    networks:
+      - spring-boot-net
+
+  spring-boot-app:
+    container_name: spring-test
+#    image: spring/test # ✅local image that build using docker file
+    image: lakshminarayansirsath/spring-test:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres  # ✅ Ensure DB starts first
+    networks:
+      - spring-boot-net  # ✅ Added network
+
+volumes:
+  postgres:
+
+networks:
+  spring-boot-net:
+    driver: bridge
+
+
+#services:
+#  postgres:
+#    container_name: postgres-sql
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: root
+#      POSTGRES_DB: demo_db
+#    ports:
+#      - "9090:5432"
+#    volumes:
+#      - postgres:/var/lib/postgres/data
+#    networks:
+#      - spring-boot-net
+#  spring-boot-app:
+#    container_name: spring-test
+#    image: spring/test
+#    ports:
+#      - "8080:8080"
+#
+#volumes:
+#  postgres:
+#
+#networks:
+#  spring-boot-net:
+#    driver: bridge
+#
+#
+#
